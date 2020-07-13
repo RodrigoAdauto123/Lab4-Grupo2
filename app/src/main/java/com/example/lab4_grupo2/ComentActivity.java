@@ -42,6 +42,7 @@ public class ComentActivity extends AppCompatActivity {
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         LocalDateTime now = LocalDateTime.now();
+        dtf.format(now);
         Comentario comentarioClass = new Comentario();
         comentarioClass.setComentario(comentario);
         comentarioClass.setFecha(dtf.format(now));
