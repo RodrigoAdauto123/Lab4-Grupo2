@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.lab4_grupo2.EntidadesRuiz.Comentario;
 import com.example.lab4_grupo2.EntidadesRuiz.Fotografia;
@@ -19,9 +20,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
+import java.text.Format;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class DetallesActivity extends AppCompatActivity {
 
-    String apikey;
+    
     Fotografia[] listaFotografias;
     Comentario[] listaComentarios;
 
@@ -31,32 +39,55 @@ public class DetallesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detalles);
         final Fotografia fotografia = new Fotografia();
         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        
+        // Obtencio del parametro enviado: NombreFotografia
+        final String nombreFotografia = getIntent().getStringExtra("nombreFotografia");
 
-        /// VALIDACION DE UN USUARIO LOGUEADO Y OBTENCION DE SU APIKEY
-
-
-
-
-
-        databaseReference.child("usuarios").child(apikey).child("fotos").child(nombreInstancia).child("comentarios").addValueEventListener(new ValueEventListener() {
+        databaseReference.child("fotos").child(nombreFotografia).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 if (dataSnapshot.exists()){
-                    Comentario comentario = DataSnapshot.getValue(Comentario.class);
-                    listaComentarios.add(comentario);
+
+                    String autor = dataSnapshot.child("nombre").getValue().toString(); fotografia.setUsuarioCreador(autor);
+                    String fechaSubida = dataSnapshot.child("fechaSubida").getValue().toString(); fotografia.setFechaSubida(fechaSubida);
+                    String descripcion = dataSnapshot.child("descripcion").getValue().toString(); fotografia.setDescripcion(descripcion);
+                    String nombreFotografia = dataSnapshot.getKey();; fotografia.setDescripcion(descripcion); fotografia.setNombreFotografia(nombreFotografia);
+                    // Falta agregar Fotografia !!!!!!!
+                } }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {  Toast.makeText(DetallesActivity.this,"No existe fotos en la base de datos.",Toast.LENGTH_LONG).show();
+            } });
+
+
+        databaseReference.child("lista").child(nombreFotografia).child("comentarios").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    Long longitudComentarios = (dataSnapshot.getChildrenCount());
+                    int longitud2 = longitudComentarios.intValue();
+                    listaComentarios = new Comentario[longitud2];
+
+                    int inicial = 0;
+                    for (DataSnapshot children:dataSnapshot.getChildren()){
+                        if (dataSnapshot.exists()) {
+                            Comentario comentario = dataSnapshot.getValue(Comentario.class);
+                            listaComentarios[inicial] = comentario;
+                            inicial++;
+                        } //final del IF
+                    } // final del FOR
                     fotografia.setListaComentarios(listaComentarios);
-                }
-            }
+                } }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
+                Toast.makeText(DetallesActivity.this,"No existen comentarios en la base de datos.",Toast.LENGTH_LONG).show();
+            } });
 
 
 
-        // CONTINUAR ACA EL RECYCLER VIEW
+        // EL RECYCLER VIEW
         dtoComentario dtoComentario = new dtoComentario();
         dtoComentario.setListaComentario(listaComentarios);
         ListaComentariosAdapter comentariosAdapter = new ListaComentariosAdapter(dtoComentario.getListaComentario(),DetallesActivity.this);
@@ -65,15 +96,13 @@ public class DetallesActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(DetallesActivity.this));
 
         TextView autor = findViewById(R.id.textViewAutor); autor.setText(fotografia.getUsuarioCreador());
-        // ImageView foto = findViewById(R.id.imageViewFotografia); foto.setText(fotografia.getUsuarioCreador());
+        // ImageView foto = findViewById(R.id.imageViewFotografia); foto.setText(fotografia.getUsuarioCreador()); // AGREGAR FOTOGRAFIA!!!!!
         TextView descripcion = findViewById(R.id.textViewDescripcion); descripcion.setText(fotografia.getDescripcion());
         TextView fecha = findViewById(R.id.textViewFecha); fecha.setText(fotografia.getFechaSubida());
         TextView cantidadComentarios = findViewById(R.id.textViewComentarios); cantidadComentarios.setText(listaComentarios.length);
 
-
-
-
-
-
     }
+
+
 }
+

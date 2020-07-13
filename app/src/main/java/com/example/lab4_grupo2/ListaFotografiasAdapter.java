@@ -33,6 +33,7 @@ public class ListaFotografiasAdapter extends RecyclerView.Adapter<ListaFotografi
         public TextView fechaSubida;
         public TextView cantidadComentarios;
         public TextView descripcion;
+        public TextView nombreFotografia; // Invisible
 
         public FotografiaViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -41,6 +42,8 @@ public class ListaFotografiasAdapter extends RecyclerView.Adapter<ListaFotografi
             this.fechaSubida = itemView.findViewById(R.id.textViewFecha);
             this.cantidadComentarios = itemView.findViewById(R.id.textViewComentarios);
             this.descripcion = itemView.findViewById(R.id.textViewDescripcion);
+            this.nombreFotografia = itemView.findViewById(R.id.textViewNombre);
+
         }
     }
 
@@ -70,6 +73,9 @@ public class ListaFotografiasAdapter extends RecyclerView.Adapter<ListaFotografi
 
         String descripcion = fotografia.getDescripcion();
         holder.descripcion.setText(descripcion);
+
+        String nombreFotografia = fotografia.getNombreFotografia();
+        holder.nombreFotografia.setText(nombreFotografia);
 
     }
 

@@ -11,6 +11,8 @@ import android.provider.ContactsContract;
 import android.app.Fragment;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.lab4_grupo2.EntidadesRuiz.Comentario;
 import com.example.lab4_grupo2.EntidadesRuiz.Fotografia;
@@ -22,14 +24,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class PantallaPrincipalActivity extends AppCompatActivity {
 
     String apikey;
     String key;
-    Fotografia[] listaFotografias;
+
     Comentario[] listaComentarios;
+    Fotografia[] listaFotografias;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,57 +43,70 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
         final Fotografia fotografia = new Fotografia();
         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
 
-        /// VALIDACION DE UN USUARIO LOGUEADO Y OBTENCION DE SU APIKEY
 
-        databaseReference.child("usuarios").child(apikey).child("fotos").addValueEventListener(new ValueEventListener() {
+        databaseReference.child("lista").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    Long longitudFotografias = (dataSnapshot.getChildrenCount());
+                    int longitud = longitudFotografias.intValue();
+                    listaFotografias = new Fotografia[longitud];
+                    int i =0;
+                    for (DataSnapshot children:dataSnapshot.getChildren() ){
+                        if (dataSnapshot.exists()) {
+                            String autor = dataSnapshot.child("nombre").getValue().toString(); fotografia.setUsuarioCreador(autor);
+                            // Revisar lo de la fecha
+                            String fechaSubida = dataSnapshot.child("fechaSubida").getValue().toString(); fotografia.setFechaSubida(fechaSubida);
+                            String descripcion = dataSnapshot.child("descripcion").getValue().toString(); fotografia.setDescripcion(descripcion);
+                            String nombreFotografia = dataSnapshot.getKey();; fotografia.setDescripcion(descripcion); fotografia.setNombreFotografia(nombreFotografia);
+                            // Falta agregar Fotografia !!!!!!!
 
-                if (dataSnapshot.exists()) {
+                            String nombreFotografiaFiltro =  dataSnapshot.getKey(); //nombreDeLaFotografia
+                            databaseReference.child("lista").child(nombreFotografiaFiltro).child("comentarios").addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.exists()){
+                                        Long longitudComentarios = (dataSnapshot.getChildrenCount());
+                                        int longitud2 = longitudComentarios.intValue();
+                                        listaComentarios = new Comentario[longitud2];
 
-                    String nombreInstancia = DataSnapshot.child(key).getValue().toString();
+                                        int inicial = 0;
+                                        for (DataSnapshot children:dataSnapshot.getChildren()){
+                                            if (dataSnapshot.exists()) {
+                                                Comentario comentario = dataSnapshot.getValue(Comentario.class);
 
-                    String autor = DataSnapshot.child("nombre").getValue().toString();
-                    fotografia.setUsuarioCreador(autor);
-                    //
-                    String fechaSubida = DataSnapshot.child("fechaSubida").getValue().toString();
-                    fotografia.setFechaSubida(fechaSubida);
-                    //
-                    String descripcion = DataSnapshot.child("descripcion").getValue().toString();
-                    fotografia.setDescripcion(descripcion);
-                    //
-                    String foto = DataSnapshot.child("fotografia").getValue().toString();
-                    fotografia.setFotografia(foto);
+                                                // Codigo Porsiacaso la caga el date
+                                                //String fechaComentario = dataSnapshot.child("fecha").get.toString();
+                                                // String horaComentario = dataSnapshot.child("hora").getValue().toString();
+                                                // String autor = dataSnapshot.child("autor").getValue().toString();
+                                                // String descripcion = dataSnapshot.child("descripcion").getValue().toString();
 
-                databaseReference.child("usuarios").child(apikey).child("fotos").child(nombreInstancia).child("comentarios").addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                listaComentarios[inicial] = comentario;
+                                                inicial++;
+                                            } //final del IF
+                                        } // final del FOR
+                                        fotografia.setListaComentarios(listaComentarios);
+                                    } }
 
-                        if (dataSnapshot.exists()){
-                            Comentario comentario = DataSnapshot.getValue(Comentario.class);
-                            listaComentarios.equals(comentario);
-                            fotografia.setListaComentarios(listaComentarios);
-                        }
-                    }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    Toast.makeText(PantallaPrincipalActivity.this,"No existen comentarios en la base de datos.",Toast.LENGTH_LONG).show();
+                                } });
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                    }
-                });
+                            listaFotografias[i] = fotografia;
+                            i++; }
 
-                // Se genera la lista de todas las fotografias:
-                listaFotografias.add(fotografia); }
-
-            }
+                    } // final del FOR
+                } // final del IF EXSIST
+            } // final del ONDATA
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {}
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(PantallaPrincipalActivity.this,"No existe fotos en la base de datos.",Toast.LENGTH_LONG).show();
+            }
+        }); // FINAL DE TODA LA REFERENCIA FIREBASE
 
-
-        }); // FIN DATABASE REFERENCE
-
-
-        // CONTINUAR ACA EL RECYCLER VIEW
+        // RECYCLER VIEW
         dtoFotografia dtoFotografia = new dtoFotografia();
         dtoFotografia.setListaFotografia(listaFotografias);
         ListaFotografiasAdapter fotografiasAdapter = new ListaFotografiasAdapter(listaFotografias,PantallaPrincipalActivity.this);
@@ -103,7 +120,9 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), DetallesActivity.class);
-                intent.putExtra("nombreFoto", key );
+                TextView nombre = findViewById(R.id.textViewNombre);
+                String nombreFotografia = nombre.getText().toString();
+                intent.putExtra("nombreFotografia", nombreFotografia );
                 startActivity(intent);
             }
         });
