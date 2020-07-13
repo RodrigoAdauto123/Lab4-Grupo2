@@ -15,11 +15,6 @@
         <activity android:name=".SubirFotoActivity"/>
         <activity android:name=".ComentActivity"></activity>
         <activity android:name=".AfterLogin" />
-        <activity
-            android:name="com.facebook.FacebookActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name"
-            android:launchMode="singleInstance" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
