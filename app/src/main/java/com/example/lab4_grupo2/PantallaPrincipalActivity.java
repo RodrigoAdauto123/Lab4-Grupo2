@@ -75,9 +75,9 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
                                             if (dataSnapshot.exists()) {
                                                 Comentario comentario = dataSnapshot.getValue(Comentario.class);
 
-                                                // Codigo Porsiacaso la caga el date
-                                                //String fechaComentario = dataSnapshot.child("fecha").get.toString();
-                                                // String horaComentario = dataSnapshot.child("hora").getValue().toString();
+                                                // Codigo Porsiacaso
+                                                String fechaComentario = dataSnapshot.child("fecha").getValue().toString(); comentario.setFechaComentario(fechaComentario);
+                                                String horaComentario = dataSnapshot.child("hora").getValue().toString(); comentario.setHoraComentario(horaComentario);
                                                 // String autor = dataSnapshot.child("autor").getValue().toString();
                                                 // String descripcion = dataSnapshot.child("descripcion").getValue().toString();
 

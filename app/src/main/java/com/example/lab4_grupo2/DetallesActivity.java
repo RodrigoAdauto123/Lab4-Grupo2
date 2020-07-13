@@ -73,6 +73,8 @@ public class DetallesActivity extends AppCompatActivity {
                     for (DataSnapshot children:dataSnapshot.getChildren()){
                         if (dataSnapshot.exists()) {
                             Comentario comentario = dataSnapshot.getValue(Comentario.class);
+                            String fechaComentario = dataSnapshot.child("fecha").getValue().toString(); comentario.setFechaComentario(fechaComentario);
+                            String horaComentario = dataSnapshot.child("hora").getValue().toString(); comentario.setHoraComentario(horaComentario);
                             listaComentarios[inicial] = comentario;
                             inicial++;
                         } //final del IF
