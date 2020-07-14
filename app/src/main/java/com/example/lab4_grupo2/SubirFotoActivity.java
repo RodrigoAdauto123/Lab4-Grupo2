@@ -68,7 +68,7 @@ public class SubirFotoActivity extends AppCompatActivity {
         Foto foto = new Foto();
         foto.setNombre(fileName);
         foto.setAutor(autor);
-        foto.setComentario(comentario);
+        foto.setDescripcion(comentario);
         foto.setFecha(fechaString);
         databaseReference.setValue(foto);
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
