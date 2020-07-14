@@ -9,10 +9,19 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.lab4_grupo2.entidades.Foto;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import java.util.Date;
 
 public class SubirFotoActivity extends AppCompatActivity {
 
@@ -46,11 +55,28 @@ public class SubirFotoActivity extends AppCompatActivity {
     }
 
     public void guardarFoto(View view){
-        String id = "FirebaseAuth.getInstance().getCurrentUser().getUid()";
+        String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
         String fileName ="img-" + id;
         StorageReference storageReference = firebaseStorage.getReference().child("Fotos-Usuario/"+ fileName);
         UploadTask uploadTask =storageReference.putFile(path);
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("fotos").child("listafotos");
+        String autor = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        String comentario = findViewById(R.id.editTextDescripcionIncidencia).toString();
+        Date fecha = new Date();
+        String fechaString = fecha.toString();
+        Foto foto = new Foto();
+        foto.setNombre(fileName);
+        foto.setAutor(autor);
+        foto.setComentario(comentario);
+        foto.setFecha(fechaString);
+        databaseReference.setValue(foto);
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Toast.makeText(SubirFotoActivity.this, "Subida Exitosa", Toast.LENGTH_SHORT).show();
+            }
+        });
 
       //  Intent intent = new Intent(this, );
       //  this.startActivity(intent);
