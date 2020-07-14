@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.lab4_grupo2">
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -11,7 +14,18 @@
         android:theme="@style/AppTheme">
         <activity android:name=".DetallesActivity"></activity>
         <activity android:name=".PantallaPrincipalActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".SubirFotoActivity"/>
+        <activity android:name=".ComentActivity"></activity>
+        <activity android:name=".AfterLogin" />
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"
+            tools:replace="android:value" />
+
+        <activity android:name=".MainActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
