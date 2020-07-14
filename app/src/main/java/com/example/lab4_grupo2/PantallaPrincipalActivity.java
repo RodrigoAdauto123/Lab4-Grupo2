@@ -46,7 +46,7 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pantalla_principal);
-
+        mAuth=FirebaseAuth.getInstance();
 
         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
 
@@ -146,8 +146,8 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.topmenu,menu);
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        menu.findItem(R.id.nombreUsuario).setTitle(currentUser.getDisplayName());
+      //  FirebaseUser currentUser = mAuth.getCurrentUser();
+     //   menu.findItem(R.id.nombreUsuario).setTitle(currentUser.getDisplayName());
 
         return true;
     }
