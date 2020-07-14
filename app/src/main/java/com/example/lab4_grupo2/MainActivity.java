@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser!= null){
-            startActivity(new Intent(MainActivity.this,SubirFotoActivity.class));
+            startActivity(new Intent(MainActivity.this,PantallaPrincipalActivity.class));
 
             finish();
 
@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            startActivity(new Intent(MainActivity.this,SubirFotoActivity.class));
+                            startActivity(new Intent(MainActivity.this,PantallaPrincipalActivity.class));
 
                             finish();
 

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -48,31 +49,27 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pantalla_principal);
         mAuth=FirebaseAuth.getInstance();
 
+         final Fotografia fotografia = new Fotografia();
+
         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
 
 
-        databaseReference.child("fotos").addValueEventListener(new ValueEventListener() {
+        databaseReference.child("fotos").child("listafotos").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+                if (dataSnapshot.exists()){
                     Long longitudFotografias = (dataSnapshot.getChildrenCount());
                     int longitud = longitudFotografias.intValue();
                     listaFotografias = new Fotografia[longitud];
                     int i =0;
-                    for (DataSnapshot children:dataSnapshot.getChildren() ){
+                    for (DataSnapshot children : dataSnapshot.getChildren() ){
                         if (dataSnapshot.exists()) {
+                            final Fotografia fotografia1 = dataSnapshot.getValue(Fotografia.class);
 
+                             // Falta agregar Fotografia !!!!!!!
 
-                            fotografia=children.getValue(Fotografia.class);
-                 /*           String autor = dataSnapshot.child("nombre").getValue().toString(); fotografia.setUsuarioCreador(autor);
-                            // Revisar lo de la fecha
-                            String fechaSubida = dataSnapshot.child("fechaSubida").getValue().toString(); fotografia.setFechaSubida(fechaSubida);
-                            String descripcion = dataSnapshot.child("descripcion").getValue().toString(); fotografia.setDescripcion(descripcion);
-                            String nombreFotografia = dataSnapshot.getKey(); fotografia.setDescripcion(descripcion); fotografia.setNombreFotografia(nombreFotografia);
-                            // Falta agregar Fotografia !!!!!!!
-*/
                             String nombreFotografiaFiltro =  dataSnapshot.getKey(); //nombreDeLaFotografia
-                            databaseReference.child("fotos").child(nombreFotografiaFiltro).child("comentarios").addValueEventListener(new ValueEventListener() {
+                            databaseReference.child("fotos").child("listafotos").child(nombreFotografiaFiltro).child("comentarios").addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     if (dataSnapshot.exists()){
@@ -86,8 +83,8 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
                                                 Comentario comentario = dataSnapshot.getValue(Comentario.class);
 
                                                 // Codigo Porsiacaso
-                                            //    String fechaComentario = dataSnapshot.child("fecha").getValue().toString(); comentario.setFechaComentario(fechaComentario);
-                                              //  String horaComentario = dataSnapshot.child("hora").getValue().toString(); comentario.setHoraComentario(horaComentario);
+                                                String fechaComentario = dataSnapshot.child("fecha").getValue().toString(); comentario.setFechaComentario(fechaComentario);
+                                                String horaComentario = dataSnapshot.child("hora").getValue().toString(); comentario.setHoraComentario(horaComentario);
                                                 // String autor = dataSnapshot.child("autor").getValue().toString();
                                                 // String descripcion = dataSnapshot.child("descripcion").getValue().toString();
 
@@ -95,20 +92,30 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
                                                 inicial++;
                                             } //final del IF
                                         } // final del FOR
-                                        fotografia.setListaComentarios(listaComentarios);
-                                    } }
+                                        fotografia1.setListaComentarios(listaComentarios);
+                                    }
+                                    dtoFotografia dtoFotografia = new dtoFotografia();
+                                    dtoFotografia.setListaFotografia(listaFotografias);
+                                    ListaFotografiasAdapter fotografiasAdapter = new ListaFotografiasAdapter(listaFotografias,PantallaPrincipalActivity.this);
+                                    RecyclerView recyclerView = findViewById(R.id.recyclerView);
+                                    recyclerView.setAdapter(fotografiasAdapter);
+                                    recyclerView.setLayoutManager(new LinearLayoutManager(PantallaPrincipalActivity.this));}
 
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError databaseError) {
                                     Toast.makeText(PantallaPrincipalActivity.this,"No existen comentarios en la base de datos.",Toast.LENGTH_LONG).show();
                                 } });
 
-                            listaFotografias[i] = fotografia;
+                            listaFotografias[i] = fotografia1;
                             i++; }
 
                     } // final del FOR
-                 // final del IF EXSIST
+                } // final del IF EXSIST
             } // final del ONDATA
+
+
+
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -117,15 +124,13 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
         }); // FINAL DE TODA LA REFERENCIA FIREBASE
 
         // RECYCLER VIEW
-        dtoFotografia dtoFotografia = new dtoFotografia();
-        dtoFotografia.setListaFotografia(listaFotografias);
-        ListaFotografiasAdapter fotografiasAdapter = new ListaFotografiasAdapter(listaFotografias,PantallaPrincipalActivity.this);
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setAdapter(fotografiasAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(PantallaPrincipalActivity.this));
+
+
 
         // BUTTON DETALLES
- /*       Button botonDetalles = (Button) findViewById(R.id.buttonDetalles);
+    /*     Button botonDetalles = (Button) findViewById(R.id.buttonDetalles);
+       botonDetalles.setOnClickListener(new View.OnClickListener() {
+       Button botonDetalles = (Button) findViewById(R.id.buttonDetalles);
         botonDetalles.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,13 +146,17 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
 
 
     }
+    public void irSubirFoto(MenuItem item){
+        Intent intent = new Intent(context, SubirFotoActivity.class);
+        startActivity(intent);
 
-    ///Menuuuuuuuu
+    }
+    Context context=this;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.topmenu,menu);
-      //  FirebaseUser currentUser = mAuth.getCurrentUser();
-     //   menu.findItem(R.id.nombreUsuario).setTitle(currentUser.getDisplayName());
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        menu.findItem(R.id.nombreUsuario).setTitle(currentUser.getDisplayName());
 
         return true;
     }
@@ -169,14 +178,17 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
 
                                 FirebaseAuth.getInstance().signOut();
                                 finish();
-                                startActivity( new Intent(PantallaPrincipalActivity.this,MainActivity.class));
+                                startActivity( new Intent(context,MainActivity.class));
+                                return true;
+                            case R.id.subirfoto:
                                 return true;
                             default:
                                 Log.d("infoapp","cerrando sesion");
 
                                 FirebaseAuth.getInstance().signOut();
                                 finish();
-                                startActivity( new Intent(PantallaPrincipalActivity.this,MainActivity.class));
+                                Intent intent=new Intent(context,MainActivity.class);
+                                startActivity( new Intent(context,MainActivity.class));
                                 return true;
 
                         }
@@ -185,11 +197,14 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
                 popupMenu.show();
             default:
 
+
         }
 
 
         return super.onOptionsItemSelected(item);
     }
+
+
 
 
 

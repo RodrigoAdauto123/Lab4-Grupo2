@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,7 +39,7 @@ import java.util.Locale;
 
 public class DetallesActivity extends AppCompatActivity {
 
-
+    
     Fotografia[] listaFotografias;
     Comentario[] listaComentarios;
 
@@ -47,7 +49,7 @@ public class DetallesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detalles);
         final Fotografia fotografia = new Fotografia();
         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-
+        
         // Obtencio del parametro enviado: NombreFotografia
         final String nombreFotografia = getIntent().getStringExtra("nombreFotografia");
 
@@ -112,7 +114,13 @@ public class DetallesActivity extends AppCompatActivity {
         TextView cantidadComentarios = findViewById(R.id.textViewComentarios); cantidadComentarios.setText(listaComentarios.length);
 
     }
-    ///Menuuuuuuuu
+
+    public void irSubirFoto(MenuItem item){
+        Intent intent = new Intent(context, SubirFotoActivity.class);
+        startActivity(intent);
+
+    }
+    Context context=this;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.topmenu,menu);
@@ -139,14 +147,17 @@ public class DetallesActivity extends AppCompatActivity {
 
                                 FirebaseAuth.getInstance().signOut();
                                 finish();
-                                startActivity( new Intent(DetallesActivity.this,MainActivity.class));
+                                startActivity( new Intent(context,MainActivity.class));
+                                return true;
+                            case R.id.subirfoto:
                                 return true;
                             default:
                                 Log.d("infoapp","cerrando sesion");
 
                                 FirebaseAuth.getInstance().signOut();
                                 finish();
-                                startActivity( new Intent(DetallesActivity.this,MainActivity.class));
+                                Intent intent=new Intent(context,MainActivity.class);
+                                startActivity( new Intent(context,MainActivity.class));
                                 return true;
 
                         }
@@ -155,11 +166,14 @@ public class DetallesActivity extends AppCompatActivity {
                 popupMenu.show();
             default:
 
+
         }
 
 
         return super.onOptionsItemSelected(item);
     }
+
+
 
 
 

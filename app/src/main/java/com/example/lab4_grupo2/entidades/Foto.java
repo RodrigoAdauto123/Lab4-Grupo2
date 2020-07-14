@@ -5,7 +5,8 @@ public class Foto {
     private String nombre;
     private String fecha;
     private String autor;
-    private String comentario;
+
+    private String descripcion;
 
 
     public String getNombre() {
@@ -32,11 +33,13 @@ public class Foto {
         this.autor = autor;
     }
 
-    public String getComentario() {
-        return comentario;
+
+
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setComentario(String comentario) {
-        this.comentario = comentario;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 }

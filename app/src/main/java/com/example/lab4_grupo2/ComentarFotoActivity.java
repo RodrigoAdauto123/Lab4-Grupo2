@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,7 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class ComentActivity extends AppCompatActivity {
+public class ComentarFotoActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
 
@@ -54,10 +55,17 @@ public class ComentActivity extends AppCompatActivity {
         .setValue(comentarioClass);
     }
     //menuuuuuuuu
+
+    public void irSubirFoto(MenuItem item){
+        Intent intent = new Intent(context, SubirFotoActivity.class);
+        startActivity(intent);
+
+    }
+    Context context=this;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.topmenu,menu);
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         menu.findItem(R.id.nombreUsuario).setTitle(currentUser.getDisplayName());
 
         return true;
@@ -66,42 +74,47 @@ public class ComentActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-switch (item.getItemId()){
-    case R.id.nombreUsuario:
-        View menuitem = findViewById(R.id.nombreUsuario);
-        PopupMenu popupMenu=new PopupMenu(this, menuitem);
-        popupMenu.getMenuInflater().inflate(R.menu.topmenu,popupMenu.getMenu());
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.cerrarcesion:
-                        Log.d("infoapp","cerrando sesion");
-                        Toast.makeText(ComentActivity.this,"va bien",Toast.LENGTH_SHORT);
-                        FirebaseAuth.getInstance().signOut();
-                        finish();
-                        startActivity( new Intent(ComentActivity.this,MainActivity.class));
-                        return true;
-                    default:
-                        Log.d("infoapp","cerrando sesion");
-                        Toast.makeText(ComentActivity.this,"va bien",Toast.LENGTH_SHORT);
-                        FirebaseAuth.getInstance().signOut();
-                        finish();
-                        startActivity( new Intent(ComentActivity.this,MainActivity.class));
-                        return true;
+        switch (item.getItemId()){
+            case R.id.nombreUsuario:
+                View menuitem = findViewById(R.id.nombreUsuario);
+                PopupMenu popupMenu=new PopupMenu(this, menuitem);
+                popupMenu.getMenuInflater().inflate(R.menu.topmenu,popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()){
+                            case R.id.cerrarcesion:
+                                Log.d("infoapp","cerrando sesion");
 
-                }
-            }
-        });
-        popupMenu.show();
-    default:
-        Toast.makeText(ComentActivity.this,"tampoco  va bien",Toast.LENGTH_SHORT);
+                                FirebaseAuth.getInstance().signOut();
+                                finish();
+                                startActivity( new Intent(context,MainActivity.class));
+                                return true;
+                            case R.id.subirfoto:
+                                return true;
+                            default:
+                                Log.d("infoapp","cerrando sesion");
 
-}
+                                FirebaseAuth.getInstance().signOut();
+                                finish();
+                                Intent intent=new Intent(context,MainActivity.class);
+                                startActivity( new Intent(context,MainActivity.class));
+                                return true;
+
+                        }
+                    }
+                });
+                popupMenu.show();
+            default:
+
+
+        }
 
 
         return super.onOptionsItemSelected(item);
     }
+
+
 
 
 

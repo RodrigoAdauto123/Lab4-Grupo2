@@ -82,11 +82,12 @@
         android:id="@+id/buttonComentario"
         android:layout_width="202dp"
         android:layout_height="40dp"
+        android:onClick="ingresarComentario"
         android:text="Agregar Comentario"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.93"
+        app:layout_constraintHorizontal_bias="0.564"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewDescripcion"
-        app:layout_constraintVertical_bias="0.957" />
+        app:layout_constraintVertical_bias="0.83" />
 </androidx.constraintlayout.widget.ConstraintLayout>
