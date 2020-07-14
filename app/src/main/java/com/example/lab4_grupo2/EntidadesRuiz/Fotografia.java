@@ -12,6 +12,7 @@ public class Fotografia {
     private String fotografia;
     private Comentario[] listaComentarios;
     private int cantidadComentarios;
+    private String nombreFotografia;
 
 
     public String getUsuarioCreador() {
@@ -60,5 +61,13 @@ public class Fotografia {
 
     public void setCantidadComentarios(int cantidadComentarios) {
         this.cantidadComentarios = cantidadComentarios;
+    }
+
+    public String getNombreFotografia() {
+        return nombreFotografia;
+    }
+
+    public void setNombreFotografia(String nombreFotografia) {
+        this.nombreFotografia = nombreFotografia;
     }
 }

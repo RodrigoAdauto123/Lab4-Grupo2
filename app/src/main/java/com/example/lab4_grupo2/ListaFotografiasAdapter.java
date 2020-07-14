@@ -1,11 +1,9 @@
 package com.example.lab4_grupo2;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,9 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lab4_grupo2.EntidadesRuiz.Comentario;
 import com.example.lab4_grupo2.EntidadesRuiz.Fotografia;
-
-import java.util.ArrayList;
-import java.util.Date;
 
 public class ListaFotografiasAdapter extends RecyclerView.Adapter<ListaFotografiasAdapter.FotografiaViewHolder> {
 
@@ -35,7 +30,7 @@ public class ListaFotografiasAdapter extends RecyclerView.Adapter<ListaFotografi
         public TextView fechaSubida;
         public TextView cantidadComentarios;
         public TextView descripcion;
-        public Button buttonDetalles;
+        public TextView nombreFotografia; // Invisible
 
         public FotografiaViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -44,7 +39,8 @@ public class ListaFotografiasAdapter extends RecyclerView.Adapter<ListaFotografi
             this.fechaSubida = itemView.findViewById(R.id.textViewFecha);
             this.cantidadComentarios = itemView.findViewById(R.id.textViewComentarios);
             this.descripcion = itemView.findViewById(R.id.textViewDescripcion);
-            this.buttonDetalles=itemView.findViewById(R.id.buttonDetalles);
+            this.nombreFotografia = itemView.findViewById(R.id.textViewNombre);
+
         }
     }
 
@@ -75,22 +71,16 @@ public class ListaFotografiasAdapter extends RecyclerView.Adapter<ListaFotografi
         String descripcion = fotografia.getDescripcion();
         holder.descripcion.setText(descripcion);
 
-
-        holder.buttonDetalles.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), DetallesActivity.class);
-                intent.putExtra("nombreFoto", key );
-                startActivity(intent);
-            }
-        });
+        String nombreFotografia = fotografia.getNombreFotografia();
+        holder.nombreFotografia.setText(nombreFotografia);
 
     }
 
 
 
-    @Override
-    public int getItemCount() {
-        return listaFotografias.length;
-    }
+    //@Override
+   public int getItemCount() {
+        //return listaFotografias.length;
+       return 0;
+   }
 }
