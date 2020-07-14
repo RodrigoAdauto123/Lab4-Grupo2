@@ -37,6 +37,7 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
 
     String apikey;
     String key;
+    FirebaseAuth mAuth;
 
     Comentario[] listaComentarios;
     Fotografia[] listaFotografias;
@@ -53,7 +54,7 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
         databaseReference.child("fotos").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()){
+
                     Long longitudFotografias = (dataSnapshot.getChildrenCount());
                     int longitud = longitudFotografias.intValue();
                     listaFotografias = new Fotografia[longitud];
@@ -106,7 +107,7 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
                             i++; }
 
                     } // final del FOR
-                } // final del IF EXSIST
+                 // final del IF EXSIST
             } // final del ONDATA
 
             @Override
@@ -140,11 +141,12 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
 
 
     }
+
     ///Menuuuuuuuu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.topmenu,menu);
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
         menu.findItem(R.id.nombreUsuario).setTitle(currentUser.getDisplayName());
 
         return true;

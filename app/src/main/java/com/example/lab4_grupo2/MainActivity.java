@@ -191,5 +191,10 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    public void irSubirFoto(View view){
+        Intent intent = new Intent(this, SubirFotoActivity.class);
+        startActivity(intent);
+
+    }
 
 }
