@@ -196,7 +196,7 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
 
         // BUTTON DETALLES
         Button botonDetalles = (Button) findViewById(R.id.buttonDetalles);
-        botonDetalles.setOnClickListener(new View.OnClickListener() {
+       /* botonDetalles.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), DetallesActivity.class);
@@ -207,7 +207,7 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
             }
         });
 
-
+        */
 
 
     }
