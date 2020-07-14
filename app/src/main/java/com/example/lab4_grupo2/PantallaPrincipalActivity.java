@@ -40,11 +40,12 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pantalla_principal);
 
-        final Fotografia fotografia = new Fotografia();
+         final Fotografia fotografia = new Fotografia();
+
         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
 
 
-        databaseReference.child("lista").addValueEventListener(new ValueEventListener() {
+        databaseReference.child("fotos").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()){
@@ -52,17 +53,14 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
                     int longitud = longitudFotografias.intValue();
                     listaFotografias = new Fotografia[longitud];
                     int i =0;
-                    for (DataSnapshot children:dataSnapshot.getChildren() ){
+                    for (DataSnapshot children : dataSnapshot.getChildren() ){
                         if (dataSnapshot.exists()) {
-                            String autor = dataSnapshot.child("nombre").getValue().toString(); fotografia.setUsuarioCreador(autor);
-                            // Revisar lo de la fecha
-                            String fechaSubida = dataSnapshot.child("fechaSubida").getValue().toString(); fotografia.setFechaSubida(fechaSubida);
-                            String descripcion = dataSnapshot.child("descripcion").getValue().toString(); fotografia.setDescripcion(descripcion);
-                            String nombreFotografia = dataSnapshot.getKey();; fotografia.setDescripcion(descripcion); fotografia.setNombreFotografia(nombreFotografia);
-                            // Falta agregar Fotografia !!!!!!!
+                            final Fotografia fotografia1 = dataSnapshot.getValue(Fotografia.class);
+
+                             // Falta agregar Fotografia !!!!!!!
 
                             String nombreFotografiaFiltro =  dataSnapshot.getKey(); //nombreDeLaFotografia
-                            databaseReference.child("lista").child(nombreFotografiaFiltro).child("comentarios").addValueEventListener(new ValueEventListener() {
+                            databaseReference.child("fotos").child(nombreFotografiaFiltro).child("comentarios").addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     if (dataSnapshot.exists()){
@@ -85,7 +83,7 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
                                                 inicial++;
                                             } //final del IF
                                         } // final del FOR
-                                        fotografia.setListaComentarios(listaComentarios);
+                                        fotografia1.setListaComentarios(listaComentarios);
                                     } }
 
                                 @Override
@@ -93,12 +91,16 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
                                     Toast.makeText(PantallaPrincipalActivity.this,"No existen comentarios en la base de datos.",Toast.LENGTH_LONG).show();
                                 } });
 
-                            listaFotografias[i] = fotografia;
+                            listaFotografias[i] = fotografia1;
                             i++; }
 
                     } // final del FOR
                 } // final del IF EXSIST
             } // final del ONDATA
+
+
+
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -107,6 +109,7 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
         }); // FINAL DE TODA LA REFERENCIA FIREBASE
 
         // RECYCLER VIEW
+
         dtoFotografia dtoFotografia = new dtoFotografia();
         dtoFotografia.setListaFotografia(listaFotografias);
         ListaFotografiasAdapter fotografiasAdapter = new ListaFotografiasAdapter(listaFotografias,PantallaPrincipalActivity.this);
@@ -116,7 +119,7 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
 
         // BUTTON DETALLES
         Button botonDetalles = (Button) findViewById(R.id.buttonDetalles);
-       /* botonDetalles.setOnClickListener(new View.OnClickListener() {
+       botonDetalles.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), DetallesActivity.class);
@@ -126,8 +129,6 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        */
 
 
     }

@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -105,6 +107,12 @@ public class DetallesActivity extends AppCompatActivity {
 
     }
 
+
+    public void ingresarComentario(View view){
+        Intent intent = new Intent(this,ComentActivity.class);
+        startActivity(intent);
+
+    }
 
 }
 
