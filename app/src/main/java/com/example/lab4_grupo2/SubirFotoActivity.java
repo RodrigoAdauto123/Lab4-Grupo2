@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,7 +63,8 @@ public class SubirFotoActivity extends AppCompatActivity {
         UploadTask uploadTask =storageReference.putFile(path);
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("fotos").child("listafotos");
         String autor = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-        String comentario = findViewById(R.id.editTextDescripcionIncidencia).toString();
+        EditText editText = (EditText) findViewById(R.id.editTextDescripcionIncidencia);
+        String comentario = editText.getText().toString();
         Date fecha = new Date();
         String fechaString = fecha.toString();
         Foto foto = new Foto();
