@@ -1,21 +1,28 @@
 package com.example.lab4_grupo2;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.lab4_grupo2.entidades.Foto;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -88,6 +95,70 @@ public class SubirFotoActivity extends AppCompatActivity {
 
 
     }
+
+    Context context=this;
+    public void irSubirFoto(MenuItem item){
+
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.topmenu,menu);
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        menu.findItem(R.id.nombreUsuario).setTitle(currentUser.getDisplayName());
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()){
+            case R.id.nombreUsuario:
+                View menuitem = findViewById(R.id.nombreUsuario);
+                PopupMenu popupMenu=new PopupMenu(this, menuitem);
+                popupMenu.getMenuInflater().inflate(R.menu.topmenu,popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()){
+                            case R.id.cerrarcesion:
+                                Log.d("infoapp","cerrando sesion");
+
+                                FirebaseAuth.getInstance().signOut();
+                                finish();
+                                startActivity( new Intent(context,MainActivity.class));
+                                return true;
+                            case R.id.subirfoto:
+                                return true;
+                            default:
+                                Log.d("infoapp","cerrando sesion");
+
+                                FirebaseAuth.getInstance().signOut();
+                                finish();
+                                Intent intent=new Intent(context,MainActivity.class);
+                                startActivity( new Intent(context,MainActivity.class));
+                                return true;
+
+                        }
+                    }
+                });
+                popupMenu.show();
+            default:
+
+
+        }
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
+
+
+
 
 
 

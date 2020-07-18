@@ -5,10 +5,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +22,8 @@ import com.example.lab4_grupo2.EntidadesRuiz.Comentario;
 import com.example.lab4_grupo2.EntidadesRuiz.Fotografia;
 import com.example.lab4_grupo2.EntidadesRuiz.dtoComentario;
 import com.example.lab4_grupo2.EntidadesRuiz.dtoFotografia;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -107,12 +115,68 @@ public class DetallesActivity extends AppCompatActivity {
 
     }
 
-
-    public void ingresarComentario(View view){
-        Intent intent = new Intent(this,ComentActivity.class);
+    public void irSubirFoto(MenuItem item){
+        Intent intent = new Intent(context, SubirFotoActivity.class);
         startActivity(intent);
 
     }
+    Context context=this;
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.topmenu,menu);
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        menu.findItem(R.id.nombreUsuario).setTitle(currentUser.getDisplayName());
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()){
+            case R.id.nombreUsuario:
+                View menuitem = findViewById(R.id.nombreUsuario);
+                PopupMenu popupMenu=new PopupMenu(this, menuitem);
+                popupMenu.getMenuInflater().inflate(R.menu.topmenu,popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()){
+                            case R.id.cerrarcesion:
+                                Log.d("infoapp","cerrando sesion");
+
+                                FirebaseAuth.getInstance().signOut();
+                                finish();
+                                startActivity( new Intent(context,MainActivity.class));
+                                return true;
+                            case R.id.subirfoto:
+                                return true;
+                            default:
+                                Log.d("infoapp","cerrando sesion");
+
+                                FirebaseAuth.getInstance().signOut();
+                                finish();
+                                Intent intent=new Intent(context,MainActivity.class);
+                                startActivity( new Intent(context,MainActivity.class));
+                                return true;
+
+                        }
+                    }
+                });
+                popupMenu.show();
+            default:
+
+
+        }
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
+
+
 
 }
 

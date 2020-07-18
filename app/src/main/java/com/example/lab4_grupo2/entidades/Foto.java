@@ -5,6 +5,7 @@ public class Foto {
     private String nombre;
     private String fecha;
     private String autor;
+
     private String descripcion;
 
 
@@ -31,6 +32,7 @@ public class Foto {
     public void setAutor(String autor) {
         this.autor = autor;
     }
+
 
 
     public String getDescripcion() {

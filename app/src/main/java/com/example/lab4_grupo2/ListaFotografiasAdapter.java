@@ -13,9 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.lab4_grupo2.EntidadesRuiz.Comentario;
 import com.example.lab4_grupo2.EntidadesRuiz.Fotografia;
 
-import java.util.ArrayList;
-import java.util.Date;
-
 public class ListaFotografiasAdapter extends RecyclerView.Adapter<ListaFotografiasAdapter.FotografiaViewHolder> {
 
     Fotografia[] listaFotografias;
@@ -81,8 +78,9 @@ public class ListaFotografiasAdapter extends RecyclerView.Adapter<ListaFotografi
 
 
 
-    @Override
-    public int getItemCount() {
-        return listaFotografias.length;
-    }
+    //@Override
+   public int getItemCount() {
+        //return listaFotografias.length;
+       return 0;
+   }
 }
